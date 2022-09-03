@@ -353,8 +353,8 @@ module Resque
   # Pops a job off a queue. Queue name should be a string.
   #
   # Returns a Ruby object.
-  def pop(queue)
-    decode(data_store.pop_from_queue(queue))
+  def pop(*queues, interval: 0)
+    decode(data_store.pop_from_queue(*queues, interval: interval))
   end
 
   # Returns an integer representing the size of a queue.
@@ -512,8 +512,8 @@ module Resque
   # precise name of a queue: case matters.
   #
   # This method is considered part of the `stable` API.
-  def reserve(queue)
-    Job.reserve(queue)
+  def reserve(*queues, interval: 5.0)
+    return Job.reserve(*queues, interval: interval)
   end
 
   # Validates if the given klass could be a valid Resque job
