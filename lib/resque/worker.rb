@@ -246,6 +246,14 @@ module Resque
       loop do
         break if shutdown?
 
+        # Wait until queues are populated. If queues is a glob and there are no
+        # queues defined yet, we can wait until the queues become defined in
+        # redis.
+        while queues.empty?
+          procline "Waiting for queues to be defined"
+          sleep 5.seconds
+        end
+
         unless work_one_job(interval: interval, &block)
           state_change
           break if interval.zero?
