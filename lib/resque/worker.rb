@@ -329,7 +329,7 @@ module Resque
 
     # Attempts to grab a job off one of the provided queues. Returns
     # nil if no job can be found.
-    def reserve(interval: 5.0)
+    def reserve(interval: 0)
       return Resque.reserve(*queues, interval: interval)
     rescue Exception => e
       log_with_severity :error, "Error reserving job: #{e.inspect}"
