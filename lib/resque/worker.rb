@@ -764,8 +764,7 @@ module Resque
       # report on state changes.
       if @last_state.present? && (current_state != @last_state || @last_report_time.before?(current_time - REPORTING_INTERVAL))
         @queue_tags ||= self.queues.each_with_index.to_h { |queue, index| [:"queue_#{index}", StringUtil.datadog_pretty(queue)] }.merge(
-          queues: StringUtil.datadog_pretty(self.queues.join(':')),
-          worker_uuid: "#{ENV['HOSTNAME']}-#{Process.pid}",
+          queues: StringUtil.datadog_pretty(self.queues.join(':'))
         )
         BranchUtil.increment(:'active_job.worker', by: current_time - @last_report_time, worker_status: @last_state, **@queue_tags)
         STATSD.flush
